@@ -2,11 +2,9 @@ package com.github.essien.banquemisr.irrigation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 /**
@@ -26,9 +24,9 @@ public class LandConfigurationDto implements Serializable {
      */
     @NotEmpty(message = "'waterConfigs' must not be empty")
     @Valid
-    private final List<WaterConfig> waterConfigs;
+    private final List<WaterConfigDto> waterConfigs;
 
-    private LandConfigurationDto(String landId, List<WaterConfig> waterConfigs) {
+    private LandConfigurationDto(String landId, List<WaterConfigDto> waterConfigs) {
         this.landId = landId;
         this.waterConfigs = waterConfigs;
     }
@@ -41,71 +39,8 @@ public class LandConfigurationDto implements Serializable {
         this.landId = landId;
     }
 
-    public List<WaterConfig> getWaterConfigs() {
+    public List<WaterConfigDto> getWaterConfigs() {
         return waterConfigs;
-    }
-
-    public static class WaterConfig {
-
-        @NotNull(message = "'start' date is required")
-        private final ZonedDateTime start;
-
-        @NotNull(message = "'end' date is required")
-        private final ZonedDateTime end;
-
-        @NotNull(message = "'amountOfWater' is required")
-        private final Long amountOfWater;
-
-        private WaterConfig(ZonedDateTime start, ZonedDateTime end, Long amountOfWater) {
-            this.start = start;
-            this.end = end;
-            this.amountOfWater = amountOfWater;
-        }
-
-        public ZonedDateTime getStart() {
-            return start;
-        }
-
-        public ZonedDateTime getEnd() {
-            return end;
-        }
-
-        public Long getAmountOfWater() {
-            return amountOfWater;
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public static class Builder {
-
-            private ZonedDateTime start;
-            private ZonedDateTime end;
-            private Long amountOfWater;
-
-            private Builder() {
-            }
-
-            public Builder withStart(ZonedDateTime start) {
-                this.start = start;
-                return this;
-            }
-
-            public Builder withEnd(ZonedDateTime end) {
-                this.end = end;
-                return this;
-            }
-
-            public Builder withAmountOfWater(Long amountOfWater) {
-                this.amountOfWater = amountOfWater;
-                return this;
-            }
-
-            public LandConfigurationDto.WaterConfig build() {
-                return new LandConfigurationDto.WaterConfig(start, end, amountOfWater);
-            }
-        }
     }
 
     public static Builder builder() {
@@ -115,7 +50,7 @@ public class LandConfigurationDto implements Serializable {
     public static class Builder {
 
         private String landId;
-        private List<LandConfigurationDto.WaterConfig> waterConfigs;
+        private List<WaterConfigDto> waterConfigs;
 
         private Builder() {
         }
@@ -125,7 +60,7 @@ public class LandConfigurationDto implements Serializable {
             return this;
         }
 
-        public Builder withWaterConfigs(List<LandConfigurationDto.WaterConfig> waterConfigs) {
+        public Builder withWaterConfigs(List<WaterConfigDto> waterConfigs) {
             this.waterConfigs = waterConfigs;
             return this;
         }

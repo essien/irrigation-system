@@ -7,10 +7,11 @@ import com.github.essien.banquemisr.irrigation.config.MapperFactory;
 import com.github.essien.banquemisr.irrigation.dto.LandConfigurationDto;
 import com.github.essien.banquemisr.irrigation.dto.LandCreationDto;
 import com.github.essien.banquemisr.irrigation.dto.LandModificationDto;
+import com.github.essien.banquemisr.irrigation.dto.WaterConfigDto;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
 import com.github.essien.banquemisr.irrigation.service.LandService;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -76,10 +77,10 @@ public class LandResourceTest {
 
     @Test
     public void testConfigureWhenLandIdIsSetInRequestBody() throws Exception {
-        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT);
-        final ZonedDateTime startTime = endTime.minusMinutes(1);
+        final LocalTime endTime = LocalTime.now(ZONE_GMT);
+        final LocalTime startTime = endTime.minusMinutes(1);
         LandConfigurationDto landConfigurationDto = LandConfigurationDto.builder().withLandId("something").withWaterConfigs(
-                Arrays.asList(LandConfigurationDto.WaterConfig.builder().withStart(startTime)
+                Arrays.asList(WaterConfigDto.builder().withStart(startTime)
                         .withEnd(endTime).withAmountOfWater(10L).build()
                 )
         ).build();
@@ -93,10 +94,10 @@ public class LandResourceTest {
 
     @Test
     public void testConfigureWhenAllRequiredFieldsArePresent() throws Exception {
-        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT).withNano(3);
-        final ZonedDateTime startTime = endTime.minusMinutes(1);
+        final LocalTime endTime = LocalTime.now(ZONE_GMT).withNano(3);
+        final LocalTime startTime = endTime.minusMinutes(1);
         LandConfigurationDto landConfigurationDto = LandConfigurationDto.builder().withWaterConfigs(
-                Arrays.asList(LandConfigurationDto.WaterConfig.builder().withStart(startTime)
+                Arrays.asList(WaterConfigDto.builder().withStart(startTime)
                         .withEnd(endTime).withAmountOfWater(10L).build()
                 )
         ).build();
@@ -143,8 +144,8 @@ public class LandResourceTest {
 
     @Test
     public void testGetPaginated() throws Exception {
-        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT).withNano(3);
-        final ZonedDateTime startTime = endTime.minusMinutes(1);
+        final LocalTime endTime = LocalTime.now(ZONE_GMT).withNano(3);
+        final LocalTime startTime = endTime.minusMinutes(1);
         BDDMockito.given(landService.getAll(any(Integer.class), any(Integer.class))).willReturn(
                 new PageModel<>(Arrays.asList(
                         LandModel.builder().withLandId("first").withArea(5.0).withWaterConfigs(
@@ -157,9 +158,9 @@ public class LandResourceTest {
                         ).build()
                 ), 0, 5)
         );
-        BDDMockito.willAnswer(iom -> iom.getArgument(0)).given(landService).update(any(LandModel.class));
 
         mvc.perform(MockMvcRequestBuilders.get("/api/v1/lands"))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("status").value("success"))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Okay, 2 lands found."));

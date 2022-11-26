@@ -10,7 +10,7 @@ import com.github.essien.banquemisr.irrigation.model.PageModel;
 import com.github.essien.banquemisr.irrigation.repo.LandRepository;
 import com.github.essien.banquemisr.irrigation.service.LandService;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import ma.glasnost.orika.MapperFacade;
 import org.junit.Before;
@@ -98,8 +98,8 @@ public class LandServiceImplTest {
         Land land = landRepository.findByKey(key).orElse(null);
         assertThat(land).isNotNull();
 
-        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT);
-        final ZonedDateTime startTime = endTime.minusMinutes(1);
+        final LocalTime endTime = LocalTime.now(ZONE_GMT);
+        final LocalTime startTime = endTime.minusMinutes(1);
         landModel = LandModel.builder().withLandModel(landModel).withWaterConfigs(
                 Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
                         .withEnd(endTime).withAmountOfWater(10L).build()
@@ -113,8 +113,8 @@ public class LandServiceImplTest {
         land = landRepository.findByKey(key).orElse(null);
         assertThat(land.getWaterConfigs().size()).isEqualTo(1);
         WaterConfig waterConfig = land.getWaterConfigs().get(0);
-        assertThat(waterConfig.getStart().atZone(ZONE_GMT)).isEqualTo(startTime);
-        assertThat(waterConfig.getEnd().atZone(ZONE_GMT)).isEqualTo(endTime);
+        assertThat(waterConfig.getStart()).isEqualTo(startTime);
+        assertThat(waterConfig.getEnd()).isEqualTo(endTime);
         assertThat(waterConfig.getWaterQuantity()).isEqualTo(10L);
         assertThat(land.getArea()).isEqualTo(5.0);
 
@@ -180,8 +180,8 @@ public class LandServiceImplTest {
     public void getAllShouldReturnResultsMatchingThePaginationCriteria() {
         // Arrange
         final ZoneId GMT_ZONE_ID = ZONE_GMT;
-        final ZonedDateTime endTime = ZonedDateTime.now(GMT_ZONE_ID);
-        final ZonedDateTime startTime = endTime.minusMinutes(1);
+        final LocalTime endTime = LocalTime.now(GMT_ZONE_ID);
+        final LocalTime startTime = endTime.minusMinutes(1);
         createEntry(LandModel.builder().withLandId("first-id").withArea(5.0).withWaterConfigs(
                 Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
                         .withEnd(endTime).withAmountOfWater(10L).build()

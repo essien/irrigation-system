@@ -1,6 +1,6 @@
 package com.github.essien.banquemisr.irrigation.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -92,21 +92,21 @@ public class LandModel {
 
     public static class WaterConfig {
 
-        private final ZonedDateTime start;
-        private final ZonedDateTime end;
+        private final LocalTime start;
+        private final LocalTime end;
         private final Long amountOfWater;
 
-        WaterConfig(ZonedDateTime start, ZonedDateTime end, Long amountOfWater) {
+        WaterConfig(LocalTime start, LocalTime end, Long amountOfWater) {
             this.start = start;
             this.end = end;
             this.amountOfWater = amountOfWater;
         }
 
-        public ZonedDateTime getStart() {
+        public LocalTime getStart() {
             return start;
         }
 
-        public ZonedDateTime getEnd() {
+        public LocalTime getEnd() {
             return end;
         }
 
@@ -120,19 +120,19 @@ public class LandModel {
 
         public static class Builder {
 
-            private ZonedDateTime start;
-            private ZonedDateTime end;
+            private LocalTime start;
+            private LocalTime end;
             private Long amountOfWater;
 
             private Builder() {
             }
 
-            public Builder withStart(ZonedDateTime start) {
+            public Builder withStart(LocalTime start) {
                 this.start = start;
                 return this;
             }
 
-            public Builder withEnd(ZonedDateTime end) {
+            public Builder withEnd(LocalTime end) {
                 this.end = end;
                 return this;
             }

@@ -64,8 +64,9 @@ public class LandResource {
 
     @GetMapping
     public ResponseEntity<Response> getPaginated(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                                    @RequestParam(required = false, defaultValue = "50") Integer size) {
+                                                 @RequestParam(required = false, defaultValue = "50") Integer size) {
         PageModel<LandModel> pageModel = landService.getAll(page, size);
-        return RestUtil.retrievedMany("land", "lands", new PageOutput(pageModel));
+        return RestUtil.retrievedMany("land", "lands",
+                                      new PageOutput(pageModel, landModel -> mapper.mapAsList(landModel, LandDto.class)));
     }
 }

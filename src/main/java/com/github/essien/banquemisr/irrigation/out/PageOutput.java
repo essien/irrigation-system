@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author bodmas
@@ -18,8 +20,8 @@ public class PageOutput implements Serializable {
     private final int page;
     private final int size;
 
-    public <T> PageOutput(PageModel<T> pageModel) {
-        this.elements = pageModel.getElements();
+    public <U, V> PageOutput(PageModel<U> pageModel, Function<List<U>, List<V>> map) {
+        this.elements = map.apply(pageModel.getElements());
         this.page = pageModel.getPage();
         this.size = pageModel.getSize();
     }

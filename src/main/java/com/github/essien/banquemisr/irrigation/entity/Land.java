@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
+ * Entity representing a plot of land.
+ *
  * @author bodmas
  * @since Nov 26, 2022.
  */

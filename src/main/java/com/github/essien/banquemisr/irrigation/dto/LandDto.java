@@ -2,6 +2,7 @@ package com.github.essien.banquemisr.irrigation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author bodmas
@@ -14,6 +15,7 @@ public class LandDto implements Serializable {
 
     private String landId;
     private Double area;
+    private List<WaterConfigDto> waterConfigs;
 
     public String getLandId() {
         return landId;
@@ -29,5 +31,13 @@ public class LandDto implements Serializable {
 
     public void setArea(Double area) {
         this.area = area;
+    }
+
+    public List<WaterConfigDto> getWaterConfigs() {
+        return waterConfigs;
+    }
+
+    public void setWaterConfigs(List<WaterConfigDto> waterConfigs) {
+        this.waterConfigs = waterConfigs;
     }
 }

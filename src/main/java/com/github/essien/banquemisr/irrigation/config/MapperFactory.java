@@ -1,11 +1,9 @@
 package com.github.essien.banquemisr.irrigation.config;
 
-import com.github.essien.banquemisr.irrigation.Constants;
 import com.github.essien.banquemisr.irrigation.entity.Land;
 import com.github.essien.banquemisr.irrigation.entity.WaterConfig;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +14,7 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.converter.ConverterFactory;
+import ma.glasnost.orika.converter.builtin.PassThroughConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.ClassMapBuilder;
 import ma.glasnost.orika.metadata.Type;
@@ -34,6 +33,7 @@ public class MapperFactory {
         ma.glasnost.orika.MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
         ConverterFactory converterFactory = factory.getConverterFactory();
 
+        converterFactory.registerConverter(new PassThroughConverter(LocalTime.class));
         converterFactory.registerConverter(new CustomConverter<Land, LandModel>() {
             @Override
             public LandModel convert(Land land, Type<? extends LandModel> destinationType, MappingContext mappingContext) {
@@ -44,19 +44,12 @@ public class MapperFactory {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<ZonedDateTime, LocalDateTime>() {
-            @Override
-            public LocalDateTime convert(ZonedDateTime source, Type<? extends LocalDateTime> destinationType,
-                                         MappingContext mappingContext) {
-                return source.toLocalDateTime();
-            }
-        });
-
         converterFactory.registerConverter(new BidirectionalConverter<LandModel.WaterConfig, WaterConfig>() {
             @Override
             public LandModel.WaterConfig convertFrom(WaterConfig d, Type<LandModel.WaterConfig> type, MappingContext mc) {
-                return LandModel.WaterConfig.builder().withStart(d.getStart().atZone(Constants.ZONE_GMT))
-                        .withEnd(d.getEnd().atZone(Constants.ZONE_GMT))
+                return LandModel.WaterConfig.builder()
+                        .withStart(d.getStart())
+                        .withEnd(d.getEnd())
                         .withAmountOfWater(d.getWaterQuantity())
                         .build();
             }
@@ -64,8 +57,8 @@ public class MapperFactory {
             @Override
             public WaterConfig convertTo(LandModel.WaterConfig source, Type<WaterConfig> type, MappingContext mc) {
                 WaterConfig waterConfig = new WaterConfig();
-                waterConfig.setStart(source.getStart().toLocalDateTime());
-                waterConfig.setEnd(source.getEnd().toLocalDateTime());
+                waterConfig.setStart(source.getStart());
+                waterConfig.setEnd(source.getEnd());
                 waterConfig.setWaterQuantity(source.getAmountOfWater());
                 return waterConfig;
             }
