@@ -22,7 +22,7 @@ public interface LandService {
     void configure(LandModel landModel);
 
     /**
-     * Update a plot of land
+     * Update a plot of land.
      * @param landModel land model with modification details
      * @return the updated object
      */

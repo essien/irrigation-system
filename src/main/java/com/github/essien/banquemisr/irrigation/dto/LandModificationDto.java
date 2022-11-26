@@ -1,9 +1,10 @@
 package com.github.essien.banquemisr.irrigation.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * @author bodmas
@@ -14,12 +15,17 @@ public class LandModificationDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonIgnore
+    @Null(message = "'landId' should only be set in URI")
     private String landId;
 
     // TODO: Use validation instead to report error when no fields are specified in the update.
-    @NotBlank(message = "'area' must be supplied")
-    private Double area;
+    @NotNull(message = "'area' must be supplied")
+    private final Double area;
+
+    private LandModificationDto(String landId, Double area) {
+        this.landId = landId;
+        this.area = area;
+    }
 
     public String getLandId() {
         return landId;
@@ -33,7 +39,32 @@ public class LandModificationDto implements Serializable {
         return area;
     }
 
-    public void setArea(Double area) {
-        this.area = area;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String landId;
+        private Double area;
+
+        private Builder() {
+        }
+
+        @JsonProperty
+        public Builder withLandId(String landId) {
+            this.landId = landId;
+            return this;
+        }
+
+        @JsonProperty
+        public Builder withArea(Double area) {
+            this.area = area;
+            return this;
+        }
+
+        public LandModificationDto build() {
+            return new LandModificationDto(landId, area);
+        }
     }
 }

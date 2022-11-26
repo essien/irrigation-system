@@ -14,22 +14,46 @@ public class LandCreationDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "'landId' must be supplied")
-    private String landId;
-    private Double area;
+    private final String landId;
+    private final Double area;
+
+    private LandCreationDto(String landId, Double area) {
+        this.landId = landId;
+        this.area = area;
+    }
 
     public String getLandId() {
         return landId;
-    }
-
-    public void setLandId(String landId) {
-        this.landId = landId;
     }
 
     public Double getArea() {
         return area;
     }
 
-    public void setArea(Double area) {
-        this.area = area;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String landId;
+        private Double area;
+
+        private Builder() {
+        }
+
+        public Builder withLandId(String landId) {
+            this.landId = landId;
+            return this;
+        }
+
+        public Builder withArea(Double area) {
+            this.area = area;
+            return this;
+        }
+
+        public LandCreationDto build() {
+            return new LandCreationDto(landId, area);
+        }
     }
 }

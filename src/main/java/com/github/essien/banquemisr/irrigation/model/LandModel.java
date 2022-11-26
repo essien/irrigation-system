@@ -12,70 +12,132 @@ public class LandModel {
     /**
      * ID of the land that this configuration applies to.
      */
-    private String landId;
+    private final String landId;
 
     /**
      * Area of the land in square meters.
      */
-    private Double area;
+    private final Double area;
 
     /**
      * Water configuration for the land.
      */
-    private List<WaterConfig> waterConfigs;
+    private final List<WaterConfig> waterConfigs;
+
+    LandModel(String landId, Double area) {
+        this(landId, area, null);
+    }
+
+    LandModel(String landId, List<WaterConfig> waterConfigs) {
+        this(landId, null, waterConfigs);
+    }
+
+    private LandModel(String landId, Double area, List<WaterConfig> waterConfigs) {
+        this.landId = landId;
+        this.area = area;
+        this.waterConfigs = waterConfigs;
+    }
 
     public String getLandId() {
         return landId;
-    }
-
-    public void setLandId(String landId) {
-        this.landId = landId;
     }
 
     public Double getArea() {
         return area;
     }
 
-    public void setArea(Double area) {
-        this.area = area;
-    }
-
     public List<WaterConfig> getWaterConfigs() {
         return waterConfigs;
     }
 
-    public void setWaterConfigs(List<WaterConfig> waterConfigs) {
-        this.waterConfigs = waterConfigs;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String landId;
+        private Double area;
+        private List<LandModel.WaterConfig> waterConfigs;
+
+        private Builder() {
+        }
+
+        public Builder withLandId(String landId) {
+            this.landId = landId;
+            return this;
+        }
+
+        public Builder withArea(Double area) {
+            this.area = area;
+            return this;
+        }
+
+        public Builder withWaterConfigs(List<LandModel.WaterConfig> waterConfigs) {
+            this.waterConfigs = waterConfigs;
+            return this;
+        }
+
+        public LandModel build() {
+            return new LandModel(landId, area, waterConfigs);
+        }
     }
 
     public static class WaterConfig {
 
-        private ZonedDateTime start;
-        private ZonedDateTime end;
-        private Long amountOfWater;
+        private final ZonedDateTime start;
+        private final ZonedDateTime end;
+        private final Long amountOfWater;
+
+        WaterConfig(ZonedDateTime start, ZonedDateTime end, Long amountOfWater) {
+            this.start = start;
+            this.end = end;
+            this.amountOfWater = amountOfWater;
+        }
 
         public ZonedDateTime getStart() {
             return start;
-        }
-
-        public void setStart(ZonedDateTime start) {
-            this.start = start;
         }
 
         public ZonedDateTime getEnd() {
             return end;
         }
 
-        public void setEnd(ZonedDateTime end) {
-            this.end = end;
-        }
-
         public Long getAmountOfWater() {
             return amountOfWater;
         }
 
-        public void setAmountOfWater(Long amountOfWater) {
-            this.amountOfWater = amountOfWater;
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public static class Builder {
+
+            private ZonedDateTime start;
+            private ZonedDateTime end;
+            private Long amountOfWater;
+
+            private Builder() {
+            }
+
+            public Builder withStart(ZonedDateTime start) {
+                this.start = start;
+                return this;
+            }
+
+            public Builder withEnd(ZonedDateTime end) {
+                this.end = end;
+                return this;
+            }
+
+            public Builder withAmountOfWater(Long amountOfWater) {
+                this.amountOfWater = amountOfWater;
+                return this;
+            }
+
+            public LandModel.WaterConfig build() {
+                return new LandModel.WaterConfig(start, end, amountOfWater);
+            }
         }
     }
 }
