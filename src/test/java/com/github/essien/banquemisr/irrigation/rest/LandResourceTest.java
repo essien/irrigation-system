@@ -2,17 +2,16 @@ package com.github.essien.banquemisr.irrigation.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import static com.github.essien.banquemisr.irrigation.Constants.ZONE_GMT;
+import com.github.essien.banquemisr.irrigation.config.MapperFactory;
 import com.github.essien.banquemisr.irrigation.dto.LandConfigurationDto;
 import com.github.essien.banquemisr.irrigation.dto.LandCreationDto;
 import com.github.essien.banquemisr.irrigation.dto.LandModificationDto;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
 import com.github.essien.banquemisr.irrigation.service.LandService;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
-import ma.glasnost.orika.MapperFacade;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.Test;
@@ -21,7 +20,7 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +36,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = LandResource.class)
+@Import(MapperFactory.class)
 public class LandResourceTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -76,7 +76,7 @@ public class LandResourceTest {
 
     @Test
     public void testConfigureWhenLandIdIsSetInRequestBody() throws Exception {
-        final ZonedDateTime endTime = ZonedDateTime.now(ZoneId.of("Z"));
+        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT);
         final ZonedDateTime startTime = endTime.minusMinutes(1);
         LandConfigurationDto landConfigurationDto = LandConfigurationDto.builder().withLandId("something").withWaterConfigs(
                 Arrays.asList(LandConfigurationDto.WaterConfig.builder().withStart(startTime)
@@ -93,7 +93,7 @@ public class LandResourceTest {
 
     @Test
     public void testConfigureWhenAllRequiredFieldsArePresent() throws Exception {
-        final ZonedDateTime endTime = ZonedDateTime.now(ZoneId.of("Z")).withNano(3);
+        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT).withNano(3);
         final ZonedDateTime startTime = endTime.minusMinutes(1);
         LandConfigurationDto landConfigurationDto = LandConfigurationDto.builder().withWaterConfigs(
                 Arrays.asList(LandConfigurationDto.WaterConfig.builder().withStart(startTime)
@@ -143,7 +143,7 @@ public class LandResourceTest {
 
     @Test
     public void testGetPaginated() throws Exception {
-        final ZonedDateTime endTime = ZonedDateTime.now(ZoneId.of("Z")).withNano(3);
+        final ZonedDateTime endTime = ZonedDateTime.now(ZONE_GMT).withNano(3);
         final ZonedDateTime startTime = endTime.minusMinutes(1);
         BDDMockito.given(landService.getAll(any(Integer.class), any(Integer.class))).willReturn(
                 new PageModel<>(Arrays.asList(
@@ -163,14 +163,5 @@ public class LandResourceTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("status").value("success"))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Okay, 2 lands found."));
-    }
-
-    static class LocalConfig {
-
-        @Bean
-        public MapperFacade createMapperFacade() {
-            final DefaultMapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
-            return factory.getMapperFacade();
-        }
     }
 }

@@ -78,6 +78,13 @@ public class LandModel {
             return this;
         }
 
+        public Builder withLandModel(LandModel landModel) {
+            withLandId(landModel.getLandId());
+            withArea(landModel.getArea());
+            withWaterConfigs(landModel.getWaterConfigs());
+            return this;
+        }
+
         public LandModel build() {
             return new LandModel(landId, area, waterConfigs);
         }
