@@ -1,5 +1,6 @@
 package com.github.essien.banquemisr.irrigation.rest;
 
+import com.github.essien.banquemisr.irrigation.exception.DuplicateLandException;
 import com.github.essien.banquemisr.irrigation.exception.LandNotFoundException;
 import com.github.essien.banquemisr.irrigation.out.Response;
 import com.github.essien.banquemisr.irrigation.out.Status;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +38,19 @@ public class ExceptionTranslator {
     public Response landNotFoundException(LandNotFoundException ex) {
         return Response.builder().withStatus(Status.fail).withMessage("Land not found")
                 .withData(Collections.singletonMap("landId", ex.getLandId())).build();
+    }
+
+    @ExceptionHandler(DuplicateLandException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response duplicateLandException(DuplicateLandException ex) {
+        return Response.builder().withStatus(Status.fail).withMessage("A land with this ID already exists")
+                .withData(Collections.singletonMap("landId", ex.getLandId())).build();
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response httpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return Response.builder().withStatus(Status.fail).withMessage("Unable to read content. Cross-check request body").build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

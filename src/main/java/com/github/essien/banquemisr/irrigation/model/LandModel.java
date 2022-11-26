@@ -24,11 +24,11 @@ public class LandModel {
      */
     private final List<WaterConfig> waterConfigs;
 
-    LandModel(String landId, Double area) {
+    public LandModel(String landId, Double area) {
         this(landId, area, null);
     }
 
-    LandModel(String landId, List<WaterConfig> waterConfigs) {
+    public LandModel(String landId, List<WaterConfig> waterConfigs) {
         this(landId, null, waterConfigs);
     }
 
@@ -96,7 +96,7 @@ public class LandModel {
         private final LocalTime end;
         private final Long amountOfWater;
 
-        WaterConfig(LocalTime start, LocalTime end, Long amountOfWater) {
+        public WaterConfig(LocalTime start, LocalTime end, Long amountOfWater) {
             this.start = start;
             this.end = end;
             this.amountOfWater = amountOfWater;

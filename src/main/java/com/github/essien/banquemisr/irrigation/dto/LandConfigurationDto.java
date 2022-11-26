@@ -26,7 +26,7 @@ public class LandConfigurationDto implements Serializable {
     @Valid
     private final List<WaterConfigDto> waterConfigs;
 
-    private LandConfigurationDto(String landId, List<WaterConfigDto> waterConfigs) {
+    public LandConfigurationDto(String landId, List<WaterConfigDto> waterConfigs) {
         this.landId = landId;
         this.waterConfigs = waterConfigs;
     }

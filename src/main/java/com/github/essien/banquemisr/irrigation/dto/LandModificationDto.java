@@ -22,7 +22,7 @@ public class LandModificationDto implements Serializable {
     @NotNull(message = "'area' must be supplied")
     private final Double area;
 
-    private LandModificationDto(String landId, Double area) {
+    public LandModificationDto(String landId, Double area) {
         this.landId = landId;
         this.area = area;
     }

@@ -2,6 +2,7 @@ package com.github.essien.banquemisr.irrigation.service.impl;
 
 import com.github.essien.banquemisr.irrigation.entity.Land;
 import com.github.essien.banquemisr.irrigation.entity.WaterConfig;
+import com.github.essien.banquemisr.irrigation.exception.DuplicateLandException;
 import com.github.essien.banquemisr.irrigation.exception.LandNotFoundException;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
@@ -35,6 +36,8 @@ public class LandServiceImpl implements LandService {
 
     @Override
     public void create(LandModel landModel) {
+        if (landRepository.existsByKey(landModel.getLandId()))
+            throw new DuplicateLandException(landModel.getLandId());
         Land land = new Land();
         land.setKey(landModel.getLandId());
         land.setArea(landModel.getArea());

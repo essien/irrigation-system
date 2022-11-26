@@ -13,4 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface LandRepository extends JpaRepository<Land, Long> {
 
     Optional<Land> findByKey(String key);
+    boolean existsByKey(String key);
 }

@@ -17,7 +17,7 @@ public class LandCreationDto implements Serializable {
     private final String landId;
     private final Double area;
 
-    private LandCreationDto(String landId, Double area) {
+    public LandCreationDto(String landId, Double area) {
         this.landId = landId;
         this.area = area;
     }

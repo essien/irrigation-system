@@ -23,7 +23,7 @@ public class WaterConfigDto implements Serializable {
     @NotNull(message = "'amountOfWater' is required")
     private final Long amountOfWater;
 
-    WaterConfigDto(LocalTime start, LocalTime end, Long amountOfWater) {
+    public WaterConfigDto(LocalTime start, LocalTime end, Long amountOfWater) {
         this.start = start;
         this.end = end;
         this.amountOfWater = amountOfWater;

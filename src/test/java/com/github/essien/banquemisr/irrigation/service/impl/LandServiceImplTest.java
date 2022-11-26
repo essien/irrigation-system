@@ -4,6 +4,7 @@ import static com.github.essien.banquemisr.irrigation.Constants.ZONE_GMT;
 import com.github.essien.banquemisr.irrigation.config.TestConfig;
 import com.github.essien.banquemisr.irrigation.entity.Land;
 import com.github.essien.banquemisr.irrigation.entity.WaterConfig;
+import com.github.essien.banquemisr.irrigation.exception.DuplicateLandException;
 import com.github.essien.banquemisr.irrigation.exception.LandNotFoundException;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
@@ -87,6 +88,23 @@ public class LandServiceImplTest {
             assertThat(land).isNotNull();
             assertThat(land.getArea()).isEqualTo(5.0);
         }
+    }
+
+    @Test(expected = DuplicateLandException.class)
+    public void createWhenLandExistsAlreadyShouldThrow() {
+        // Arrange
+        final String key = "first-id";
+        assertThat(landRepository.findByKey(key)).isEmpty();
+
+        LandModel landModel = LandModel.builder().withLandId(key).build();
+
+        landService.create(landModel);
+
+        Land land = landRepository.findByKey(key).orElse(null);
+        assertThat(land).isNotNull();
+
+        // Act
+        landService.create(landModel);
     }
 
     @Test
