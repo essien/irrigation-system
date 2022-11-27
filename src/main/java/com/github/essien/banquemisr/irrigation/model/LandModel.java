@@ -1,6 +1,5 @@
 package com.github.essien.banquemisr.irrigation.model;
 
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -56,8 +55,19 @@ public class LandModel {
 
     public static class Builder {
 
+        /**
+         * Identifier of the land, supplied by caller.
+         */
         private String landId;
+
+        /**
+         * Area of the land in square meters.
+         */
         private Double area;
+
+        /**
+         * Water configuration for the land.
+         */
         private List<LandModel.WaterConfig> waterConfigs;
 
         private Builder() {
@@ -92,8 +102,19 @@ public class LandModel {
 
     public static class WaterConfig {
 
+        /**
+         * Cron indicating when irrigation should be triggered.
+         */
         private final String cron;
+
+        /**
+         * How long irrigation should run for, in minutes.
+         */
         private final Integer duration;
+
+        /**
+         * Total amount of water to be supplied during the irrigation process.
+         */
         private final Long amountOfWater;
 
         public WaterConfig(String cron, Integer duration, Long amountOfWater) {

@@ -1,6 +1,7 @@
 package com.github.essien.banquemisr.irrigation.rest;
 
 import com.github.essien.banquemisr.irrigation.exception.DuplicateLandException;
+import com.github.essien.banquemisr.irrigation.exception.IrrigationSchedulerException;
 import com.github.essien.banquemisr.irrigation.exception.LandNotFoundException;
 import com.github.essien.banquemisr.irrigation.out.Response;
 import com.github.essien.banquemisr.irrigation.out.Status;
@@ -51,6 +52,12 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response httpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return Response.builder().withStatus(Status.fail).withMessage("Unable to read content. Cross-check request body").build();
+    }
+
+    @ExceptionHandler(IrrigationSchedulerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response jobSchedulerException(IrrigationSchedulerException ex) {
+        return Response.builder().withStatus(Status.error).withMessage("Unable to schedule irrigation. Please try again later").build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

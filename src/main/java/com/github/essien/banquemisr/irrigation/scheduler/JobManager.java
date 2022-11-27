@@ -36,9 +36,6 @@ public class JobManager {
             System.out.println("scheduler is " + scheduler);
             if (!scheduler.isStarted())
                 scheduler.start();
-
-            addJob(SampleJob.class, "jobName1", "jobGroup1", new JobDataMap(), "0/5 * * ? * * *");
-
         } catch (SchedulerException ex) {
             System.out.println("scheduler error: " + ex.getMessage());
         }
@@ -50,20 +47,28 @@ public class JobManager {
             scheduler.shutdown(true);
     }
 
+    public boolean jobExists(String jobName, String jobGroup) throws SchedulerException {
+        return scheduler.checkExists(jobKey(jobName, jobGroup));
+    }
+
     public <T extends Job> boolean cancelJob(Class<T> jobClass, String jobName, String jobGroup, @Nullable JobDataMap jobDataMap,
                                              String cron) throws SchedulerException {
         return scheduler.unscheduleJob(triggerKey(jobName + TRIGGER_PREFIX, jobGroup));
     }
 
-    public <T extends Job> boolean removeJob(Class<T> jobClass, String jobName, String jobGroup, @Nullable JobDataMap jobDataMap,
-                                             String cron) throws SchedulerException {
-
+    public <T extends Job> boolean removeJob(String jobName, String jobGroup) throws SchedulerException {
         return scheduler.deleteJob(jobKey(jobName, jobGroup));
     }
 
     public <T extends Job> Date addJob(Class<T> jobClass, String jobName, String jobGroup, @Nullable JobDataMap jobDataMap, String cron) throws SchedulerException {
         Trigger jobTrigger = buildCronTrigger(jobName + TRIGGER_PREFIX, jobGroup, cron);
         return addQuartzJob(jobTrigger, jobClass, jobName, jobGroup, true, jobDataMap);
+    }
+
+    public <T extends Job> Date addJob(Class<T> jobClass, String jobName, String jobGroup,
+                                       @Nullable JobDataMap jobDataMap, Date executionTime) throws SchedulerException {
+        Trigger jobTrigger = buildTimedTrigger(jobName + TRIGGER_PREFIX, jobGroup, executionTime);
+        return addQuartzJob(jobTrigger, jobClass, jobName, jobGroup, false, jobDataMap);
     }
 
     public <T extends Job> Date updateJob(Class<T> jobClass, String jobName, String jobGroup,
@@ -83,6 +88,13 @@ public class JobManager {
         return newTrigger()
                 .withIdentity(name, group)
                 .withSchedule(cronSchedule(cron))
+                .build();
+    }
+
+    private Trigger buildTimedTrigger(String name, String group, Date executionTime) {
+        return newTrigger()
+                .withIdentity(name, group)
+                .startAt(executionTime)
                 .build();
     }
 

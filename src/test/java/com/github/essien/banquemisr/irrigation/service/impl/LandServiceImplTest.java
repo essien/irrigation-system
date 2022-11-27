@@ -9,9 +9,9 @@ import com.github.essien.banquemisr.irrigation.exception.LandNotFoundException;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
 import com.github.essien.banquemisr.irrigation.repo.LandRepository;
+import com.github.essien.banquemisr.irrigation.scheduler.JobManager;
 import com.github.essien.banquemisr.irrigation.service.LandService;
 import java.time.ZoneId;
-import java.time.LocalTime;
 import java.util.Arrays;
 import ma.glasnost.orika.MapperFacade;
 import org.junit.Before;
@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.After;
+import org.mockito.Mock;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +47,14 @@ public class LandServiceImplTest {
     @Autowired
     private MapperFacade mapperFacade;
 
+    @Mock
+    private JobManager jobManager;
+
     private LandService landService;
 
     @Before
     public void setUp() {
-        landService = new LandServiceImpl(landRepository, mapperFacade);
+        landService = new LandServiceImpl(landRepository, mapperFacade, jobManager);
     }
 
     @After
