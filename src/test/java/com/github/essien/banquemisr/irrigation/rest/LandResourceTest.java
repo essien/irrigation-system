@@ -77,11 +77,11 @@ public class LandResourceTest {
 
     @Test
     public void testConfigureWhenLandIdIsSetInRequestBody() throws Exception {
-        final LocalTime endTime = LocalTime.now(ZONE_GMT);
-        final LocalTime startTime = endTime.minusMinutes(1);
+        final Integer duration = 15;
+        final String cron = "0/5 * * ? * * *";
         LandConfigurationDto landConfigurationDto = LandConfigurationDto.builder().withLandId("something").withWaterConfigs(
-                Arrays.asList(WaterConfigDto.builder().withStart(startTime)
-                        .withEnd(endTime).withAmountOfWater(10L).build()
+                Arrays.asList(WaterConfigDto.builder().withCron(cron)
+                        .withDuration(duration).withAmountOfWater(10L).build()
                 )
         ).build();
         final String writeValueAsString = objectMapper.writeValueAsString(landConfigurationDto);
@@ -95,11 +95,11 @@ public class LandResourceTest {
 
     @Test
     public void testConfigureWhenAllRequiredFieldsArePresent() throws Exception {
-        final LocalTime endTime = LocalTime.now(ZONE_GMT).withNano(3);
-        final LocalTime startTime = endTime.minusMinutes(1);
+        final Integer duration = 60;
+        final String cron = "0/5 * * ? * * *";
         LandConfigurationDto landConfigurationDto = LandConfigurationDto.builder().withWaterConfigs(
-                Arrays.asList(WaterConfigDto.builder().withStart(startTime)
-                        .withEnd(endTime).withAmountOfWater(10L).build()
+                Arrays.asList(WaterConfigDto.builder().withCron(cron)
+                        .withDuration(duration).withAmountOfWater(10L).build()
                 )
         ).build();
         final String writeValueAsString = objectMapper.writeValueAsString(landConfigurationDto);
@@ -110,8 +110,8 @@ public class LandResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("status").value("success"))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Okay, land configuration was successfully updated."))
                 .andExpect(MockMvcResultMatchers.jsonPath("data.landId").value("land-id"))
-                .andExpect(MockMvcResultMatchers.jsonPath("data.waterConfigs[0].start").value(startTime.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("data.waterConfigs[0].end").value(endTime.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.waterConfigs[0].cron").value(cron))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.waterConfigs[0].duration").value(duration))
                 .andExpect(MockMvcResultMatchers.jsonPath("data.waterConfigs[0].amountOfWater").value(10L));
     }
 
@@ -145,17 +145,17 @@ public class LandResourceTest {
 
     @Test
     public void testGetPaginated() throws Exception {
-        final LocalTime endTime = LocalTime.now(ZONE_GMT).withNano(3);
-        final LocalTime startTime = endTime.minusMinutes(1);
+        final Integer duration = 15;
+        final String cron = "0/5 * * ? * * *";
         BDDMockito.given(landService.getAll(any(Integer.class), any(Integer.class))).willReturn(
                 new PageModel<>(Arrays.asList(
                         LandModel.builder().withLandId("first").withArea(5.0).withWaterConfigs(
-                                Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
-                                        .withEnd(endTime).withAmountOfWater(10L).build())
+                                Arrays.asList(LandModel.WaterConfig.builder().withCron(cron)
+                                        .withDuration(duration).withAmountOfWater(10L).build())
                         ).build(),
                         LandModel.builder().withLandId("second").withArea(10.0).withWaterConfigs(
-                                Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
-                                        .withEnd(endTime).withAmountOfWater(20L).build())
+                                Arrays.asList(LandModel.WaterConfig.builder().withCron(cron)
+                                        .withDuration(duration).withAmountOfWater(20L).build())
                         ).build()
                 ), 0, 5)
         );

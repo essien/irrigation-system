@@ -50,8 +50,8 @@ public class MapperFactory {
             @Override
             public LandModel.WaterConfig convertFrom(WaterConfig d, Type<LandModel.WaterConfig> type, MappingContext mc) {
                 return LandModel.WaterConfig.builder()
-                        .withStart(d.getStart().toLocalTime())
-                        .withEnd(d.getEnd().toLocalTime())
+                        .withCron(d.getCron())
+                        .withDuration(d.getDuration())
                         .withAmountOfWater(d.getWaterQuantity())
                         .build();
             }
@@ -59,8 +59,8 @@ public class MapperFactory {
             @Override
             public WaterConfig convertTo(LandModel.WaterConfig source, Type<WaterConfig> type, MappingContext mc) {
                 WaterConfig waterConfig = new WaterConfig();
-                waterConfig.setStart(source.getStart().atDate(Constants.EPOCH_DATE));
-                waterConfig.setEnd(source.getEnd().atDate(Constants.EPOCH_DATE));
+                waterConfig.setCron(source.getCron());
+                waterConfig.setDuration(source.getDuration());
                 waterConfig.setWaterQuantity(source.getAmountOfWater());
                 return waterConfig;
             }

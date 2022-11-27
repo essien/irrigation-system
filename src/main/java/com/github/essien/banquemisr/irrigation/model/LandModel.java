@@ -92,22 +92,22 @@ public class LandModel {
 
     public static class WaterConfig {
 
-        private final LocalTime start;
-        private final LocalTime end;
+        private final String cron;
+        private final Integer duration;
         private final Long amountOfWater;
 
-        public WaterConfig(LocalTime start, LocalTime end, Long amountOfWater) {
-            this.start = start;
-            this.end = end;
+        public WaterConfig(String cron, Integer duration, Long amountOfWater) {
+            this.cron = cron;
+            this.duration = duration;
             this.amountOfWater = amountOfWater;
         }
 
-        public LocalTime getStart() {
-            return start;
+        public String getCron() {
+            return cron;
         }
 
-        public LocalTime getEnd() {
-            return end;
+        public Integer getDuration() {
+            return duration;
         }
 
         public Long getAmountOfWater() {
@@ -120,20 +120,20 @@ public class LandModel {
 
         public static class Builder {
 
-            private LocalTime start;
-            private LocalTime end;
+            private String cron;
+            private Integer duration;
             private Long amountOfWater;
 
             private Builder() {
             }
 
-            public Builder withStart(LocalTime start) {
-                this.start = start;
+            public Builder withCron(String cron) {
+                this.cron = cron;
                 return this;
             }
 
-            public Builder withEnd(LocalTime end) {
-                this.end = end;
+            public Builder withDuration(Integer duration) {
+                this.duration = duration;
                 return this;
             }
 
@@ -143,7 +143,7 @@ public class LandModel {
             }
 
             public LandModel.WaterConfig build() {
-                return new LandModel.WaterConfig(start, end, amountOfWater);
+                return new LandModel.WaterConfig(cron, duration, amountOfWater);
             }
         }
     }

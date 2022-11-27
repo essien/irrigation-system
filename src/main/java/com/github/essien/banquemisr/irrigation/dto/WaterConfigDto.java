@@ -14,27 +14,27 @@ public class WaterConfigDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull(message = "'start' time is required")
-    private final LocalTime start;
+    @NotNull(message = "'cron' is required")
+    private final String cron;
 
-    @NotNull(message = "'end' time is required")
-    private final LocalTime end;
+    @NotNull(message = "'duration' is required")
+    private final Integer duration;
 
     @NotNull(message = "'amountOfWater' is required")
     private final Long amountOfWater;
 
-    public WaterConfigDto(LocalTime start, LocalTime end, Long amountOfWater) {
-        this.start = start;
-        this.end = end;
+    public WaterConfigDto(String cron, Integer duration, Long amountOfWater) {
+        this.cron = cron;
+        this.duration = duration;
         this.amountOfWater = amountOfWater;
     }
 
-    public LocalTime getStart() {
-        return start;
+    public String getCron() {
+        return cron;
     }
 
-    public LocalTime getEnd() {
-        return end;
+    public Integer getDuration() {
+        return duration;
     }
 
     public Long getAmountOfWater() {
@@ -47,20 +47,20 @@ public class WaterConfigDto implements Serializable {
 
     public static class Builder {
 
-        private LocalTime start;
-        private LocalTime end;
+        private String cron;
+        private Integer duration;
         private Long amountOfWater;
 
         private Builder() {
         }
 
-        public Builder withStart(LocalTime start) {
-            this.start = start;
+        public Builder withCron(String cron) {
+            this.cron = cron;
             return this;
         }
 
-        public Builder withEnd(LocalTime end) {
-            this.end = end;
+        public Builder withDuration(Integer duration) {
+            this.duration = duration;
             return this;
         }
 
@@ -70,7 +70,7 @@ public class WaterConfigDto implements Serializable {
         }
 
         public WaterConfigDto build() {
-            return new WaterConfigDto(start, end, amountOfWater);
+            return new WaterConfigDto(cron, duration, amountOfWater);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.github.essien.banquemisr.irrigation.entity;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,11 +18,17 @@ public class WaterConfig extends BaseAuditableModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "_start", nullable = false)
-    private LocalDateTime start;
+    /**
+     * Cron expression describing when to execute.
+     */
+    @Column(name = "cron", nullable = false, length = 127)
+    private String cron;
 
-    @Column(name = "_end", nullable = false)
-    private LocalDateTime end;
+    /**
+     * Describes how long to run (in minutes).
+     */
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
 
     @Column(name = "water_quantity", nullable = false)
     private Long waterQuantity;
@@ -31,20 +36,20 @@ public class WaterConfig extends BaseAuditableModel {
     public WaterConfig() {
     }
 
-    public LocalDateTime getStart() {
-        return start;
+    public String getCron() {
+        return cron;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
+    public void setCron(String cron) {
+        this.cron = cron;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
+    public Integer getDuration() {
+        return duration;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public Long getWaterQuantity() {

@@ -10,26 +10,26 @@ DROP TABLE IF EXISTS lands;
 
 -- Create table statements
 CREATE TABLE lands (
-  id bigint NOT NULL auto_increment,
-  created_at datetime NOT NULL,
-  updated_at datetime NOT NULL,
+  id BIGINT NOT NULL auto_increment,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
   area DOUBLE PRECISION,
   _key VARCHAR(127) NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE lands_x_water_configs (
-  land_id bigint NOT NULL,
-  water_config_id bigint NOT NULL
+  land_id BIGINT NOT NULL,
+  water_config_id BIGINT NOT NULL
 );
 
 CREATE TABLE water_configs (
-  id bigint NOT NULL auto_increment,
-  created_at datetime NOT NULL,
-  updated_at datetime NOT NULL,
-  _end datetime NOT NULL,
-  _start datetime NOT NULL,
-  water_quantity bigint NOT NULL,
+  id BIGINT NOT NULL auto_increment,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  cron VARCHAR(127) NOT NULL,
+  duration INTEGER NOT NULL,
+  water_quantity BIGINT NOT NULL,
   PRIMARY KEY (id)
 );
 

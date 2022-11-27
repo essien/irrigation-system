@@ -118,11 +118,11 @@ public class LandServiceImplTest {
         Land land = landRepository.findByKey(key).orElse(null);
         assertThat(land).isNotNull();
 
-        final LocalTime endTime = LocalTime.now(ZONE_GMT);
-        final LocalTime startTime = endTime.minusMinutes(1);
+        final String cron = "0/5 * * ? * * *";
+        final Integer duration = 25;
         landModel = LandModel.builder().withLandModel(landModel).withWaterConfigs(
-                Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
-                        .withEnd(endTime).withAmountOfWater(10L).build()
+                Arrays.asList(LandModel.WaterConfig.builder().withCron(cron)
+                        .withDuration(duration).withAmountOfWater(10L).build()
                 )
         ).build();
 
@@ -133,18 +133,18 @@ public class LandServiceImplTest {
         land = landRepository.findByKey(key).orElse(null);
         assertThat(land.getWaterConfigs().size()).isEqualTo(1);
         WaterConfig waterConfig = land.getWaterConfigs().get(0);
-        assertThat(waterConfig.getStart().toLocalTime()).isEqualTo(startTime);
-        assertThat(waterConfig.getEnd().toLocalTime()).isEqualTo(endTime);
+        assertThat(waterConfig.getCron()).isEqualTo(cron);
+        assertThat(waterConfig.getDuration()).isEqualTo(duration);
         assertThat(waterConfig.getWaterQuantity()).isEqualTo(10L);
         assertThat(land.getArea()).isEqualTo(5.0);
 
         // Re-arrange
         landModel = LandModel.builder().withLandModel(landModel).withWaterConfigs(
                 Arrays.asList(
-                        LandModel.WaterConfig.builder().withStart(startTime)
-                                .withEnd(endTime).withAmountOfWater(5L).build(),
-                        LandModel.WaterConfig.builder().withStart(startTime)
-                                .withEnd(endTime).withAmountOfWater(7L).build()
+                        LandModel.WaterConfig.builder().withCron(cron)
+                                .withDuration(duration).withAmountOfWater(5L).build(),
+                        LandModel.WaterConfig.builder().withCron(cron)
+                                .withDuration(duration).withAmountOfWater(7L).build()
                 )
         ).build();
 
@@ -200,16 +200,16 @@ public class LandServiceImplTest {
     public void getAllShouldReturnResultsMatchingThePaginationCriteria() {
         // Arrange
         final ZoneId GMT_ZONE_ID = ZONE_GMT;
-        final LocalTime endTime = LocalTime.now(GMT_ZONE_ID);
-        final LocalTime startTime = endTime.minusMinutes(1);
+        final String cron = "0/5 * * ? * * *";
+        final Integer duration = 20;
         createEntry(LandModel.builder().withLandId("first-id").withArea(5.0).withWaterConfigs(
-                Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
-                        .withEnd(endTime).withAmountOfWater(10L).build()
+                Arrays.asList(LandModel.WaterConfig.builder().withCron(cron)
+                        .withDuration(duration).withAmountOfWater(10L).build()
                 )
         ).build());
         createEntry(LandModel.builder().withLandId("second-id").withArea(7.0).withWaterConfigs(
-                Arrays.asList(LandModel.WaterConfig.builder().withStart(startTime)
-                        .withEnd(endTime).withAmountOfWater(20L).build()
+                Arrays.asList(LandModel.WaterConfig.builder().withCron(cron)
+                        .withDuration(duration).withAmountOfWater(20L).build()
                 )
         ).build());
 
