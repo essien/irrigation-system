@@ -2,6 +2,7 @@ package com.github.essien.banquemisr.irrigation.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author bodmas
@@ -9,5 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  */
 @Configuration
 @EnableJpaAuditing
-public class PersistenceConfig {
+@EnableScheduling
+public class SystemConfig {
 }

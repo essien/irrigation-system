@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Import;
  * @since Nov 26, 2022.
  */
 @Configuration
-@Import({MapperFactory.class, PersistenceConfig.class})
+@Import({MapperFactory.class, SystemConfig.class})
 public class TestConfig {
 }
