@@ -5,6 +5,7 @@ import com.github.essien.banquemisr.irrigation.config.TestConfig;
 import com.github.essien.banquemisr.irrigation.entity.Land;
 import com.github.essien.banquemisr.irrigation.entity.WaterConfig;
 import com.github.essien.banquemisr.irrigation.exception.DuplicateLandException;
+import com.github.essien.banquemisr.irrigation.exception.IrrigationSchedulerException;
 import com.github.essien.banquemisr.irrigation.exception.LandNotFoundException;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
 import com.github.essien.banquemisr.irrigation.model.PageModel;
@@ -23,7 +24,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.After;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.quartz.JobDataMap;
+import org.quartz.SchedulerException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +58,9 @@ public class LandServiceImplTest {
 
     @Mock
     private JobManager jobManager;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private LandService landService;
 
@@ -114,7 +126,35 @@ public class LandServiceImplTest {
     }
 
     @Test
-    public void configureWhenAllIsWellShouldPass() {
+    public void configureWhenSchedulingErrorOccursShouldRollback() throws SchedulerException {
+        // Arrange
+        given(jobManager.addJob(any(), anyString(), anyString(), any(JobDataMap.class), anyString()))
+                .willThrow(SchedulerException.class);
+        thrown.expect(IrrigationSchedulerException.class);
+        final String key = "first-id";
+        LandModel landModel = LandModel.builder().withLandId(key).withArea(5.0).build();
+        landService.create(landModel);
+        Land land = landRepository.findByKey(key).orElse(null);
+        assertThat(land).isNotNull();
+
+        final String cron = "0/5 * * ? * * *";
+        final Integer duration = 25;
+        landModel = LandModel.builder().withLandModel(landModel).withWaterConfigs(
+                Arrays.asList(LandModel.WaterConfig.builder().withCron(cron)
+                        .withDuration(duration).withAmountOfWater(10L).build()
+                )
+        ).build();
+
+        // Act
+        landService.configure(landModel);
+
+        // Assert
+        // Check that rollback occurred.
+        assertThat(landRepository.findByKey(key)).isEmpty();
+    }
+
+    @Test
+    public void configureWhenAllIsWellShouldPass() throws SchedulerException {
         // Arrange
         final String key = "first-id";
         LandModel landModel = LandModel.builder().withLandId(key).withArea(5.0).build();
@@ -141,6 +181,7 @@ public class LandServiceImplTest {
         assertThat(waterConfig.getDuration()).isEqualTo(duration);
         assertThat(waterConfig.getWaterQuantity()).isEqualTo(10L);
         assertThat(land.getArea()).isEqualTo(5.0);
+        Mockito.verify(jobManager).addJob(any(), anyString(), anyString(), any(JobDataMap.class), anyString());
 
         // Re-arrange
         landModel = LandModel.builder().withLandModel(landModel).withWaterConfigs(
@@ -160,6 +201,7 @@ public class LandServiceImplTest {
         assertThat(land.getWaterConfigs().size()).isEqualTo(2);
         assertThat(land.getWaterConfigs()).filteredOn(config -> config.getWaterQuantity() == 5L).isNotEmpty();
         assertThat(land.getWaterConfigs()).filteredOn(config -> config.getWaterQuantity() == 7L).isNotEmpty();
+        Mockito.verify(jobManager, Mockito.times(3)).addJob(any(), anyString(), anyString(), any(JobDataMap.class), anyString());
     }
 
     @Test(expected = LandNotFoundException.class)

@@ -50,7 +50,6 @@ public class QuartzConfig {
                              = new SchedulerFactoryBean();
         schedulerFactory.setSchedulerName("misr-scheduler");
         schedulerFactory.setAutoStartup(true);
-//        schedulerFactory.setWaitForJobsToCompleteOnShutdown(true);
 
         springBeanJobFactory.setApplicationContext(applicationContext);
         schedulerFactory.setJobFactory(springBeanJobFactory);
