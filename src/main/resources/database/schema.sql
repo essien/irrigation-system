@@ -27,8 +27,8 @@ create table water_configs (
   id bigint not null auto_increment,
   created_at datetime not null,
   updated_at datetime not null,
-  _end time not null,
-  _start time not null,
+  _end datetime not null,
+  _start datetime not null,
   water_quantity bigint not null,
   primary key (id)
 );

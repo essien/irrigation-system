@@ -8,4 +8,7 @@ mvn clean test
 # Run application
 mvn clean package -DskipTests && java -DUSERNAME=<YOUR USERNAME> -DPASSWORD=<YOUR PASSWORD> -jar target/irrigation-0.0.1-SNAPSHOT.jar
 OR
-mvn spring-boot:run -DUSERNAME=<YOUR USERNAME> -DPASSWORD=<YOUR PASSWORD>
+export USERNAME=<YOUR USERNAME>;export PASSWORD=<YOUR PASSWORD>;mvn spring-boot:run
+
+
+Install MySQL 8

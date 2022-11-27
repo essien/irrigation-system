@@ -1,8 +1,10 @@
 package com.github.essien.banquemisr.irrigation.config;
 
+import com.github.essien.banquemisr.irrigation.Constants;
 import com.github.essien.banquemisr.irrigation.entity.Land;
 import com.github.essien.banquemisr.irrigation.entity.WaterConfig;
 import com.github.essien.banquemisr.irrigation.model.LandModel;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -48,8 +50,8 @@ public class MapperFactory {
             @Override
             public LandModel.WaterConfig convertFrom(WaterConfig d, Type<LandModel.WaterConfig> type, MappingContext mc) {
                 return LandModel.WaterConfig.builder()
-                        .withStart(d.getStart())
-                        .withEnd(d.getEnd())
+                        .withStart(d.getStart().toLocalTime())
+                        .withEnd(d.getEnd().toLocalTime())
                         .withAmountOfWater(d.getWaterQuantity())
                         .build();
             }
@@ -57,8 +59,8 @@ public class MapperFactory {
             @Override
             public WaterConfig convertTo(LandModel.WaterConfig source, Type<WaterConfig> type, MappingContext mc) {
                 WaterConfig waterConfig = new WaterConfig();
-                waterConfig.setStart(source.getStart());
-                waterConfig.setEnd(source.getEnd());
+                waterConfig.setStart(source.getStart().atDate(Constants.EPOCH_DATE));
+                waterConfig.setEnd(source.getEnd().atDate(Constants.EPOCH_DATE));
                 waterConfig.setWaterQuantity(source.getAmountOfWater());
                 return waterConfig;
             }

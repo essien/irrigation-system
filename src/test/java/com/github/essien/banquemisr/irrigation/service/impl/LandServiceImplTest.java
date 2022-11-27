@@ -36,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 @DataJpaTest
 @Import(TestConfig.class)
 @Transactional(propagation = Propagation.NEVER)
+// Remove comment on following line to pickup mysql datasource.
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class LandServiceImplTest {
 
     @Autowired
@@ -131,8 +133,8 @@ public class LandServiceImplTest {
         land = landRepository.findByKey(key).orElse(null);
         assertThat(land.getWaterConfigs().size()).isEqualTo(1);
         WaterConfig waterConfig = land.getWaterConfigs().get(0);
-        assertThat(waterConfig.getStart()).isEqualTo(startTime);
-        assertThat(waterConfig.getEnd()).isEqualTo(endTime);
+        assertThat(waterConfig.getStart().toLocalTime()).isEqualTo(startTime);
+        assertThat(waterConfig.getEnd().toLocalTime()).isEqualTo(endTime);
         assertThat(waterConfig.getWaterQuantity()).isEqualTo(10L);
         assertThat(land.getArea()).isEqualTo(5.0);
 

@@ -1,6 +1,6 @@
 package com.github.essien.banquemisr.irrigation.entity;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,10 +20,10 @@ public class WaterConfig extends BaseAuditableModel {
     private static final long serialVersionUID = 1L;
 
     @Column(name = "_start", nullable = false)
-    private LocalTime start;
+    private LocalDateTime start;
 
     @Column(name = "_end", nullable = false)
-    private LocalTime end;
+    private LocalDateTime end;
 
     @Column(name = "water_quantity", nullable = false)
     private Long waterQuantity;
@@ -31,19 +31,19 @@ public class WaterConfig extends BaseAuditableModel {
     public WaterConfig() {
     }
 
-    public LocalTime getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(LocalTime start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public LocalTime getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalTime end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 

@@ -87,6 +87,7 @@ public class LandResourceTest {
         final String writeValueAsString = objectMapper.writeValueAsString(landConfigurationDto);
         mvc.perform(MockMvcRequestBuilders.put("/api/v1/lands/land-id/configure").contentType(MediaType.APPLICATION_JSON)
                 .content(writeValueAsString))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.jsonPath("status").value("fail"))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("'landId' should only be set in URI"));
